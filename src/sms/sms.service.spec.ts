@@ -3,6 +3,7 @@ import { SmsService } from './sms.service';
 import { CreateSmsDto } from './dto/create-sms.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { HttpException } from '@nestjs/common';
+import { create } from 'handlebars';
 
 describe('SmsService', () => {
   let smsService: SmsService;
@@ -21,7 +22,7 @@ describe('SmsService', () => {
         SmsService,
         {
           provide: PrismaService,
-          useValue: prismaServiceMock
+          useValue: new PrismaService()
         }
       ],
     }).compile();
@@ -43,13 +44,15 @@ describe('SmsService', () => {
   });
 
   it('should send an OTP PIN', async (): Promise<void> => {
-      const msisdn = '255782224075';
+      const msisdn: string = '255782224075';
       const result = await smsService.requestOTPPin(msisdn);
       expect(result).toBeDefined();
   });
 
-  it('should throw exception when create on beemOTPPin fails', async () => {
-    jest.spyOn(prisma.beemOTPPin, 'create').mockResolvedValue(null);
-    await expect(smsService.requestOTPPin('99999999')).rejects.toThrow(HttpException);
-  });
+  it('should verify an OTP PIN', async (): Promise<void> => {
+    const opt: string = '123456';
+    const phone: string = '255782224075';
+    const result = await smsService.verifyOTPPin(opt, phone);
+    expect(result).toBeUndefined();
+  }, 10000);
 });

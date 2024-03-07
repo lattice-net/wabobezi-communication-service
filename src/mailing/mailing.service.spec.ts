@@ -1,33 +1,44 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { MailingService } from './mailing.service';
 import { CreateMailingDto } from './dto/create-mailing.dto';
+import { MailerService } from '@nestjs-modules/mailer';
 
 describe('MailingService', () => {
-  let mailerService: MailingService;
+  let mailingService: MailingService;
+  let mailerService: MailerService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [MailingService],
+      providers: [
+        MailingService,
+        {
+          provide: MailerService,
+          useValue: {
+            sendMail: jest.fn()
+          }
+        }
+      ],
     }).compile();
 
-    mailerService = module.get<MailingService>(MailingService);
+    mailingService = module.get<MailingService>(MailingService);
+    mailerService = module.get<MailerService>(MailerService);
   });
 
   it('should be defined', () => {
-    expect(mailerService).toBeDefined();
+    expect(mailingService).toBeDefined();
   });
 
-  it('should call `sendMail` with correct parameters', async () => {
+  it('should call `sendMail` with correct parameters', async (): Promise<void> => {
     const dto: CreateMailingDto = new CreateMailingDto();
 
-    await mailerService.create(dto);
+    await mailingService.create(dto);
     const sendMailArgs: { template: string; subject: string; to: string } = {
-      to: 'jessicakitali@gmail.com',
+      to: 'justinmajura@gmail.com',
       subject: 'Welcome to Nice App!!! Confirm your Email',
       template: 'confirmation',
     };
 
-    expect(mailerService.create).toHaveBeenCalledWith(sendMailArgs);
-    expect(mailerService.create).toHaveBeenCalledTimes(1);
+    expect(mailerService.sendMail).toHaveBeenCalledWith(sendMailArgs);
+    expect(mailerService.sendMail).toHaveBeenCalledTimes(1);
   });
 });
