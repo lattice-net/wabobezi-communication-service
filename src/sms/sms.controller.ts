@@ -1,42 +1,30 @@
 import {
   Controller,
-  Get,
   Post,
   Body,
-  Patch,
-  Param,
-  Delete,
 } from '@nestjs/common';
 import { SmsService } from './sms.service';
-import { CreateSmDto } from './dto/create-sm.dto';
-import { UpdateSmDto } from './dto/update-sm.dto';
+import { CreateSmsDto } from './dto/create-sms.dto';
+import { ApiTags } from '@nestjs/swagger';
+import { VerifyOtpPinSmsDto } from './dto/verify-otp-pin-sms.dto';
 
+@ApiTags('SMS')
 @Controller('sms')
 export class SmsController {
   constructor(private readonly smsService: SmsService) {}
 
   @Post()
-  create(@Body() createSmDto: CreateSmDto) {
-    return this.smsService.create(createSmDto);
+  sendSms(@Body() createSmsDto: CreateSmsDto) : Promise<object> {
+    return this.smsService.create(createSmsDto);
   }
 
-  @Get()
-  findAll() {
-    return this.smsService.findAll();
+  @Post('request/otp')
+  requestOTPPin(@Body() createSmsDto: CreateSmsDto): Promise<object> {
+    return this.smsService.requestOTPPin(createSmsDto.phone)
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.smsService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSmDto: UpdateSmDto) {
-    return this.smsService.update(+id, updateSmDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.smsService.remove(+id);
+  @Post('verify/otp')
+  verifyOTPPin(@Body() verifyOtpPinSmsDto: VerifyOtpPinSmsDto){
+    return {}
   }
 }

@@ -6,7 +6,7 @@ import { MailerService } from '@nestjs-modules/mailer';
 export class MailingService {
   constructor(private mailerService: MailerService) {}
   async create(createMailingDto: CreateMailingDto): Promise<any> {
-    console.log(createMailingDto)
+    console.log(createMailingDto);
     return await this.sendEmail(
       'justinmajura@gmail.com',
       'Welcome to Nice App!!! Confirm your Email',
@@ -14,7 +14,11 @@ export class MailingService {
     );
   }
 
-  private async sendEmail(to: string, subject: string, template: string ): Promise<any> {
+  private async sendEmail(
+    to: string,
+    subject: string,
+    template: string,
+  ): Promise<any> {
     return await this.mailerService.sendMail({
       to: to,
       subject: subject,
