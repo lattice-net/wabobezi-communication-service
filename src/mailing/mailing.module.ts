@@ -8,7 +8,7 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
   imports: [
     MailerModule.forRoot({
       transport: {
-        host: 'gsmtp',
+        host: 'smtp',
         service: 'gmail',
         secure: false,
         auth: {
