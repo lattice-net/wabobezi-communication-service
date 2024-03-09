@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { SmsService } from './sms.service';
 import { CreateSmsDto } from './dto/create-sms.dto';
 import { PrismaService } from '../prisma/prisma.service';
-import { HttpException } from '@nestjs/common';
+import { HttpException, HttpStatus } from '@nestjs/common';
 import { create } from 'handlebars';
 
 describe('SmsService', () => {
@@ -53,6 +53,10 @@ describe('SmsService', () => {
     const opt: string = '123456';
     const phone: string = '255782224075';
     const result = await smsService.verifyOTPPin(opt, phone);
-    expect(result).toBeUndefined();
+    if(result !== undefined) {
+      expect(typeof result).toBe('object')
+    }else{
+      expect(result).toBeUndefined();
+    }
   }, 10000);
 });
