@@ -62,3 +62,38 @@ jobs:
             package.json
             tsconfig.json
             tsconfig.build.jso
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [test, build]
+    steps:
+      - name: cleanup
+        run: rm -rf dist || true
+      - name: download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: artifacts
+          path: communication
+      - name: list out files
+        run: ls
+      - name: deploy on a remote server
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SERVER_PORT }}
+          passphrase: ci
+          source: communication/*
+          target: "/var/www/html/wabobezi"
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          passphrase: ci
+          script: |
+            chmod +x /var/www/html/wabobezi/communication/scripts/stop-service.sh
+            /var/www/html/wabobezi/communication/scripts/stop-service.sh
+            chmod +x /var/www/html/wabobezi/communication/scripts/start-service.sh
+            /var/www/html/wabobezi/communication/scripts/start-service.sh

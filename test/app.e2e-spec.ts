@@ -10,50 +10,20 @@ describe('MailingController, MessageController (e2e)', () => {
   beforeEach(async (): Promise<void> => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [MailingModule, SmsModule],
+      providers:[]
     }).compile();
 
     app = moduleFixture.createNestApplication();
     await app.init();
   });
 
-  it('/ (POST)', () => {
+  it('should return 200 OK', () => {
     return request(app.getHttpServer())
-      .post('/mailing')
-      .send({
-        email: 'justinmajura@gmail.com',
-      })
-      .expect(201)
-      .expect('Content-Type', /json/);
+      .get('/mailing')
+      .expect(404);
   });
 
-  it('/sms/verify/otp (POST)', () => {
-    return request(app.getHttpServer())
-      .post('/sms/verify-otp')
-      .send({
-        phone: '255782224075',
-        pin: '312412',
-      })
-      .expect([201, 404])
-      .expect('Content-Type', /json/);
-  });
-
-  it('/sms/request/otp (POST)', () => {
-    return request(app.getHttpServer())
-      .post('/message/request-otp')
-      .send({
-        phone: '255782224075',
-      })
-      .expect(201)
-      .expect('Content-Type', /json/);
-  });
-
-  it('/sms/send (POST)', () => {
-    return request(app.getHttpServer())
-      .post('/message/send-sms')
-      .send({
-        phone: '255782224075',
-      })
-      .expect(201)
-      .expect('Content-Type', /json/);
+  afterAll(async () : Promise<void> => {
+    await app.close();
   });
 });

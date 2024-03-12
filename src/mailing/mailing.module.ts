@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
 import { MailingService } from './mailing.service';
 import { MailingController } from './mailing.controller';
-import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { MailerModule } from '@nestjs-modules/mailer';
 
 @Module({
   imports: [
     MailerModule.forRoot({
       transport: {
-        host: 'smtp',
+        host: 'gsmtp',
         service: 'gmail',
         secure: false,
         auth: {
