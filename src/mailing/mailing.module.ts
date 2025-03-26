@@ -13,7 +13,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
         secure: false,
         auth: {
           user: 'justinjustin0797@gmail.com',
-          pass: 'emsv xfor ojsa wowb',
+          pass: '',
         },
       },
       defaults: {
