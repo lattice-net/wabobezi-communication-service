@@ -34,7 +34,6 @@ jobs:
           npm run test
   build:
     runs-on: ubuntu-latest
-    needs: test
     steps:
       - name: retrieve code
         uses: actions/checkout@v3
